@@ -1,3 +1,22 @@
+# chibicc: A Small C Compiler: The OpenBSD port
+
+**This repository contains an
+[OpenBSD](https://www.openbsd.org/)
+port of
+[chibicc](https://github.com/rui314/chibicc).**
+
+To install:
+```sh
+$ doas pkg_add gmake gas bash ggrep # bash and ggrep for tests
+$ gmake && gmake install
+```
+
+Known issues:
+* amd64-only (this is a limitation of chibicc itself)
+* Occasional codegen issues? (*e.g.*, oksh crashes on exit)
+
+Feel free to open a PR here if you fix any of the issues.
+
 # chibicc: A Small C Compiler
 
 (The old master has moved to

@@ -1,4 +1,5 @@
-CFLAGS=-std=c11 -g -fno-common -Wall -Wno-switch
+CFLAGS?=-O2 -pipe -std=c11 -g -fno-common -Wall -Wno-switch
+PREFIX?=/usr/local
 
 SRCS=$(wildcard *.c)
 OBJS=$(SRCS:.c=.o)
@@ -40,6 +41,18 @@ stage2/test/%.exe: stage2/chibicc test/%.c
 test-stage2: $(TESTS:test/%=stage2/test/%)
 	for i in $^; do echo $$i; ./$$i || exit 1; echo; done
 	test/driver.sh ./stage2/chibicc
+
+# Install
+
+install: chibicc
+	install -c -m 755 ./chibicc ${DESTDIR}${PREFIX}/bin
+	install -d -m 755 ${DESTDIR}${PREFIX}/libexec/chibicc/include/machine
+	install -d -m 755 ${DESTDIR}${PREFIX}/libexec/chibicc/include/amd64
+	install -c -m 444 ./include/stdarg.h ${DESTDIR}${PREFIX}/libexec/chibicc/include
+	install -c -m 444 ./include/stddef.h ${DESTDIR}${PREFIX}/libexec/chibicc/include
+	sed 34,57d /usr/include/machine/endian.h > ${DESTDIR}${PREFIX}/libexec/chibicc/include/machine/endian.h
+	chmod 444 ${DESTDIR}${PREFIX}/libexec/chibicc/include/machine/endian.h
+	install -c -m 444 ${DESTDIR}${PREFIX}/libexec/chibicc/include/machine/endian.h ${DESTDIR}${PREFIX}/libexec/chibicc/include/amd64/endian.h
 
 # Misc.
 
